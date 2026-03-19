@@ -79,6 +79,22 @@ export const getBestSellers = async (req, res) => {
     }
 }
 
+export const getTopBrands = async (req, res) => {
+    try {
+        const brands = ['adidas', 'nike', 'skechers', 'puma'];
+        const products = await Products.find({
+            brand: { $in: brands.map(b => new RegExp(b, 'i')) }
+        })
+            .sort({ orders: -1 })
+            .limit(12);
+
+        return res.status(200).json(products);
+    } catch (err) {
+        console.error('Error fetching top brands:', err.message);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
 //Get search results
 export const searchProducts = async (req, res) => {
     try {
